@@ -1,58 +1,90 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
              x:Class="AcademiaTioAlisson.Presentation.AppMaui.Views.LogradouroPage"
-             xmlns:vm="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
-             x:DataType="vm:LogradouroViewModel"
+             x:DataType="viewmodels:LogradouroViewModel"
              Title="{Binding Title}">
+
     <ScrollView>
-        <StackLayout Spacing="15" Margin="0,10">
-            <!-- Seção de Busca por CEP -->
-            <Border Style="{StaticResource CardBorder}" Margin="15,5">
-                <StackLayout Spacing="5">
-                    <Label Text="CEP"/>
-                    <Grid ColumnDefinitions="*,Auto">
-                        <Entry Grid.Column="0" Text="{Binding Logradouro.Cep}" Placeholder="00000-000" Keyboard="Numeric" Margin="0,0,10,0"/>
-                        <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="40" Padding="15,0"/>
-                    </Grid>
+        <StackLayout Spacing="15" Padding="20">
+            <!-- Campo de Busca por CEP -->
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <StackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="CEP" />
+                    <Entry Text="{Binding Logradouro.Cep}" Placeholder="00000-000" Keyboard="Numeric" />
                 </StackLayout>
-            </Border>
-
-            <!-- Dados do Endereço -->
-            <Border Style="{StaticResource CardBorder}" Margin="15,5">
-                <StackLayout Spacing="12">
-                    <Label Text="{Binding Logradouro.Id, StringFormat='Logradouro ID: {0}'}" Style="{StaticResource SubHeadline}"/>
-                    <StackLayout Spacing="3">
-                        <Label Text="Nome / Rua"/>
-                        <Entry Text="{Binding Logradouro.Nome}" Placeholder="Digite o nome da rua..."/>
-                    </StackLayout>
-                    <StackLayout Spacing="3">
-                        <Label Text="Bairro"/>
-                        <Entry Text="{Binding Logradouro.Bairro}" Placeholder="Digite o bairro..."/>
-                    </StackLayout>
-                    <StackLayout Spacing="3">
-                        <Label Text="Cidade"/>
-                        <Entry Text="{Binding Logradouro.Cidade}" Placeholder="Digite a cidade..."/>
-                    </StackLayout>
-                    <StackLayout Spacing="3">
-                        <Label Text="Estado (UF)"/>
-                        <Entry Text="{Binding Logradouro.Estado}" Placeholder="Ex: SC" MaxLength="2"/>
-                    </StackLayout>
-                    <StackLayout Spacing="3">
-                        <Label Text="País"/>
-                        <Entry Text="{Binding Logradouro.Pais}" Placeholder="Brasil"/>
-                    </StackLayout>
-                </StackLayout>
-            </Border>
-
-            <!-- Botões de Ação -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="15,10">
-                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="50"/>
-                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveLogradouroCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50"/>
+                <Button Grid.Column="1"
+                        Text="Buscar CEP"
+                        Command="{Binding SearchByCepCommand}"
+                        Style="{StaticResource ButtonPrimary}"
+                        HeightRequest="40"
+                        Padding="15,0"
+                        VerticalOptions="End">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                    </Button.ImageSource>
+                </Button>
             </Grid>
 
-            <!-- Indicador de Carregamento -->
-            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
+            <!-- Identificador do Logradouro -->
+            <Label Text="{Binding LogradouroId, StringFormat='Logradouro ID: {0}'}"
+                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource SubHeadline}"
+                   IsVisible="{Binding IsEditing}" />
+
+            <!-- Nome / Rua -->
+            <StackLayout Spacing="5">
+                <Label Text="Nome/Rua" />
+                <Entry Text="{Binding Logradouro.Nome}" Placeholder="Nome da rua ou logradouro" />
+            </StackLayout>
+
+            <!-- Bairro -->
+            <StackLayout Spacing="5">
+                <Label Text="Bairro" />
+                <Entry Text="{Binding Logradouro.Bairro}" Placeholder="Bairro" />
+            </StackLayout>
+
+            <!-- Cidade -->
+            <StackLayout Spacing="5">
+                <Label Text="Cidade" />
+                <Entry Text="{Binding Logradouro.Cidade}" Placeholder="Cidade" />
+            </StackLayout>
+
+            <!-- Estado (UF) -->
+            <StackLayout Spacing="5">
+                <Label Text="Estado" />
+                <Entry Text="{Binding Logradouro.Estado}" Placeholder="UF (ex: SC)" MaxLength="2" />
+            </StackLayout>
+
+            <!-- País -->
+            <StackLayout Spacing="5">
+                <Label Text="País" />
+                <Entry Text="{Binding Logradouro.Pais}" Placeholder="País" />
+            </StackLayout>
+
+            <!-- Botões de Ação -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,15,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancelar"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource ButtonSecondary}"
+                        HeightRequest="50">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe5c9;" />
+                    </Button.ImageSource>
+                </Button>
+
+                <Button Grid.Column="1"
+                        Text="Salvar"
+                        Command="{Binding SaveLogradouroCommand}"
+                        Style="{StaticResource ButtonPrimary}"
+                        HeightRequest="50">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe161;" />
+                    </Button.ImageSource>
+                </Button>
+            </Grid>
         </StackLayout>
     </ScrollView>
 </ContentPage>
