@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaTioAlisson.Presentation.AppMaui.Views.AlunoPage"
+             xmlns:vm="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
+             xmlns:converters="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.Converters"
+             x:DataType="vm:AlunoViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+        <converters:DateOnlyToDateTimeConverter x:Key="DateOnlyConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <StackLayout Spacing="15" Padding="15">
+            <!-- CPF Card -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="5" Padding="10">
+                    <Label Text="CPF"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Text="{Binding Aluno.Cpf}" Placeholder="000.000.000-00" Keyboard="Numeric"/>
+                        <Button Grid.Column="1" Text="Buscar CPF" Command="{Binding SearchByCpfCommand}" Style="{StaticResource ButtonPrimary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                </StackLayout>
+            </Border>
+
+            <!-- Dados Pessoais & Foto -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="10" Padding="10">
+                    <Label Text="Dados Pessoais" Style="{StaticResource SubHeadline}"/>
+                    <Entry Text="{Binding Aluno.Nome}" Placeholder="Nome completo"/>
+
+                    <Label Text="Data de Nascimento"/>
+                    <DatePicker Date="{Binding Aluno.DataNascimento, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" Format="dd/MM/yyyy"/>
+
+                    <Entry Text="{Binding Aluno.Telefone}" Placeholder="Telefone"/>
+                    <Entry Text="{Binding Aluno.Email}" Placeholder="E-mail"/>
+                    <Entry Text="{Binding Aluno.Senha}" Placeholder="Senha" IsPassword="True"/>
+
+                    <StackLayout Spacing="5" HorizontalOptions="Center">
+                        <Image Source="{Binding Aluno.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
+                               HeightRequest="120" WidthRequest="120" Aspect="AspectFill"/>
+                        <Button Text="Selecionar Foto" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonSecondary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+            <!-- Endereço -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="10" Padding="10">
+                    <Label Text="Endereço" Style="{StaticResource SubHeadline}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Text="{Binding Aluno.Endereco.Cep}" Placeholder="CEP"/>
+                        <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonPrimary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                    <Label Text="{Binding Aluno.Endereco.Nome, StringFormat='Rua: {0}'}" IsVisible="{Binding HasEnderecoVinculado}"/>
+                    <Label Text="{Binding Aluno.Endereco.Bairro, StringFormat='Bairro: {0}'}" IsVisible="{Binding HasEnderecoVinculado}"/>
+                    <Entry Text="{Binding Aluno.Numero}" Placeholder="Número"/>
+                    <Entry Text="{Binding Aluno.Complemento}" Placeholder="Complemento"/>
+                </StackLayout>
+            </Border>
+
+            <!-- Ações -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}"/>
+                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveAlunoCommand}" Style="{StaticResource ButtonPrimary}"/>
+            </Grid>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

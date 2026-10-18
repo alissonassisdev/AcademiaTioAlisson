@@ -25,7 +25,7 @@ public partial class ConfigPage : ContentPage
         };
     }
 
-    private async void OnSalvarTemaClicked(object sender, EventArgs e)
+    private async void OnSalvarTemaClicked(object? sender, EventArgs e)
     {
         string selectedTheme = TemaPicker.SelectedIndex switch
         {
@@ -123,7 +123,7 @@ public partial class ConfigPage : ContentPage
         }
     }
 
-    private async void OnSalvarBdClicked(object sender, EventArgs e)
+    private async void OnSalvarBdClicked(object? sender, EventArgs e)
     {
         if (DatabaseTypePicker.SelectedItem is not string selectedTypeStr ||
             !Enum.TryParse<AppDatabaseType>(selectedTypeStr, out var selectedType))
@@ -196,7 +196,7 @@ public partial class ConfigPage : ContentPage
     }
     #endregion
 
-    private async void OnCancelarClicked(object sender, EventArgs e)
+    private async void OnCancelarClicked(object? sender, EventArgs e)
     {
         await Shell.Current.GoToAsync("//dashboard");
     }

@@ -5,5 +5,5 @@ namespace AcademiaTioAlisson.Presentation.AppMaui;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {
-    protected override MauiApp CreateMauiApp() => TemaPreferencesUpdatedMessage.CreateMauiApp();
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }

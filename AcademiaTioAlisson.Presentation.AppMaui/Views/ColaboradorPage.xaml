@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaTioAlisson.Presentation.AppMaui.Views.ColaboradorPage"
+             xmlns:vm="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
+             xmlns:converters="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.Converters"
+             x:DataType="vm:ColaboradorViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+        <converters:DateOnlyToDateTimeConverter x:Key="DateOnlyConverter" />
+        <converters:EnumDisplayConverter x:Key="EnumDisplay" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <StackLayout Spacing="15" Padding="15">
+            <!-- Secção CPF -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="5" Padding="10">
+                    <Label Text="CPF"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Text="{Binding Colaborador.Cpf}" Placeholder="000.000.000-00" Keyboard="Numeric"/>
+                        <Button Grid.Column="1" Text="Buscar CPF" Command="{Binding SearchByCpfCommand}" Style="{StaticResource ButtonPrimary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                </StackLayout>
+            </Border>
+
+            <!-- Dados Pessoais & Fotografia -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="10" Padding="10">
+                    <Label Text="Dados Pessoais" Style="{StaticResource SubHeadline}"/>
+                    <Entry Text="{Binding Colaborador.Nome}" Placeholder="Nome completo"/>
+
+                    <Label Text="Data de Nascimento"/>
+                    <DatePicker Date="{Binding Colaborador.DataNascimento, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" Format="dd/MM/yyyy"/>
+
+                    <Entry Text="{Binding Colaborador.Telefone}" Placeholder="Telefone"/>
+                    <Entry Text="{Binding Colaborador.Email}" Placeholder="E-mail"/>
+                    <Entry Text="{Binding Colaborador.Senha}" Placeholder="Senha" IsPassword="True"/>
+
+                    <!-- Controlo de Imagem -->
+                    <StackLayout Spacing="5" HorizontalOptions="Center">
+                        <Image Source="{Binding Colaborador.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
+                               HeightRequest="120" WidthRequest="120" Aspect="AspectFill"/>
+                        <Button Text="Selecionar Foto" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonSecondary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+            <!-- Endereço e CEP -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="10" Padding="10">
+                    <Label Text="Endereço" Style="{StaticResource SubHeadline}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Text="{Binding Colaborador.Endereco.Cep}" Placeholder="CEP"/>
+                        <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonPrimary}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                    <Label Text="{Binding Colaborador.Endereco.Nome, StringFormat='Rua: {0}'}" IsVisible="{Binding HasEnderecoVinculado}"/>
+                    <Label Text="{Binding Colaborador.Endereco.Bairro, StringFormat='Bairro: {0}'}" IsVisible="{Binding HasEnderecoVinculado}"/>
+                    <Entry Text="{Binding Colaborador.Numero}" Placeholder="Número"/>
+                    <Entry Text="{Binding Colaborador.Complemento}" Placeholder="Complemento"/>
+                </StackLayout>
+            </Border>
+
+            <!-- Dados de Trabalho -->
+            <Border Style="{StaticResource CardBorder}">
+                <StackLayout Spacing="10" Padding="10">
+                    <Label Text="Dados de Trabalho" Style="{StaticResource SubHeadline}"/>
+
+                    <Label Text="Data de Admissão"/>
+                    <DatePicker Date="{Binding Colaborador.DataAdmissao, Converter={StaticResource DateOnlyConverter}, Mode=TwoWay}" Format="dd/MM/yyyy"/>
+
+                    <Label Text="Cargo"/>
+                    <Picker ItemsSource="{Binding ColaboradorTipos}" SelectedItem="{Binding Colaborador.Tipo}">
+                        <Picker.ItemDisplayBinding>
+                            <Binding Converter="{StaticResource EnumDisplay}" />
+                        </Picker.ItemDisplayBinding>
+                    </Picker>
+
+                    <Label Text="Vínculo"/>
+                    <Picker ItemsSource="{Binding ColaboradorVinculos}" SelectedItem="{Binding Colaborador.Vinculo}">
+                        <Picker.ItemDisplayBinding>
+                            <Binding Converter="{StaticResource EnumDisplay}" />
+                        </Picker.ItemDisplayBinding>
+                    </Picker>
+                </StackLayout>
+            </Border>
+
+            <!-- Botões de Ação -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}"/>
+                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveColaboradorCommand}" Style="{StaticResource ButtonPrimary}"/>
+            </Grid>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

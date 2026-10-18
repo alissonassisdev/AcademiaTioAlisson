@@ -32,7 +32,7 @@ public partial class LogradouroListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Erro", $"Erro ao editar logradouro: {ex.Message}", "OK");
+            await DisplayAlertAsync("Erro", $"Erro ao editar logradouro: {ex.Message}", "OK");
         }
     }
 
@@ -47,7 +47,7 @@ public partial class LogradouroListPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Erro", $"Erro ao excluir logradouro: {ex.Message}", "OK");
+            await DisplayAlertAsync("Erro", $"Erro ao excluir logradouro: {ex.Message}", "OK");
         }
     }
 }

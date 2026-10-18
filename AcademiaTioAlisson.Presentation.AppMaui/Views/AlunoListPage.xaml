@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaTioAlisson.Presentation.AppMaui.Views.AlunoListPage"
+             xmlns:vm="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
+             x:DataType="vm:AlunoListViewModel"
+             xmlns:dto="clr-namespace:AcademiaTioAlisson.Application.DTOs;assembly=AcademiaTioAlisson.Application"
+             xmlns:converters="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.Converters"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+
+        <DataTemplate x:Key="AlunoItemTemplate" x:DataType="dto:AlunoDto">
+            <Border Style="{StaticResource CardBorder}" Margin="8">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto,Auto" Padding="12">
+                    <!-- Foto adaptativa com OnIdiom -->
+                    <Image Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="4"
+                           Source="{Binding Foto, Converter={StaticResource FotoToImageSourceConverter}}"
+                           Aspect="AspectFill" Margin="0,0,10,0">
+                        <Image.HeightRequest>
+                            <OnIdiom x:TypeArguments="x:Double">
+                                <OnIdiom.Phone>95</OnIdiom.Phone>
+                                <OnIdiom.Tablet>115</OnIdiom.Tablet>
+                                <OnIdiom.Desktop>115</OnIdiom.Desktop>
+                                <OnIdiom.Default>100</OnIdiom.Default>
+                            </OnIdiom>
+                        </Image.HeightRequest>
+                        <Image.WidthRequest>
+                            <OnIdiom x:TypeArguments="x:Double">
+                                <OnIdiom.Phone>95</OnIdiom.Phone>
+                                <OnIdiom.Tablet>115</OnIdiom.Tablet>
+                                <OnIdiom.Desktop>115</OnIdiom.Desktop>
+                                <OnIdiom.Default>100</OnIdiom.Default>
+                            </OnIdiom>
+                        </Image.WidthRequest>
+                    </Image>
+
+                    <Label Grid.Row="0" Grid.Column="0" Text="{Binding Nome}" FontAttributes="Bold" FontSize="16"/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="{Binding Cpf, StringFormat='CPF: {0}'}"/>
+                    <Label Grid.Row="2" Grid.Column="0" Text="{Binding Telefone, StringFormat='Telefone: {0}'}"/>
+                    <Label Grid.Row="3" Grid.Column="0" Text="{Binding Email, StringFormat='E-mail: {0}'}"/>
+
+                    <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource ButtonSmall}" Margin="4,0" Clicked="OnEditButtonClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" />
+                        </Button.ImageSource>
+                    </Button>
+
+                    <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource ButtonDanger}" Margin="4,0" Clicked="OnDeleteButtonClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" />
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Filtro de Busca -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <Picker Grid.Column="0" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110"/>
+                <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Digite o valor..." ClearButtonVisibility="WhileEditing"/>
+                <Button Grid.Column="2" Style="{StaticResource ButtonPrimary}" Command="{Binding SearchAlunosCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                    </Button.ImageSource>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Grade Adaptativa com OnIdiom -->
+        <Grid Grid.Row="1">
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Alunos}" ItemTemplate="{StaticResource AlunoItemTemplate}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical">
+                            <GridItemsLayout.Span>
+                                <OnIdiom x:TypeArguments="x:Int32">
+                                    <OnIdiom.Phone>1</OnIdiom.Phone>
+                                    <OnIdiom.Default>1</OnIdiom.Default>
+                                    <OnIdiom.Tablet>2</OnIdiom.Tablet>
+                                    <OnIdiom.Desktop>3</OnIdiom.Desktop>
+                                    <OnIdiom.TV>4</OnIdiom.TV>
+                                </OnIdiom>
+                            </GridItemsLayout.Span>
+                        </GridItemsLayout>
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- FAB Adicionar Aluno -->
+            <Button Command="{Binding AddAlunoCommand}" Style="{StaticResource ButtonPrimary}"
+                    WidthRequest="56" HeightRequest="56" CornerRadius="28"
+                    HorizontalOptions="End" VerticalOptions="End" Margin="20">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" />
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+    </Grid>
+</ContentPage>
