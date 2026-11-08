@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaTioAlisson.Presentation.AppMaui.Views.MatriculaListPage"
+             x:Name="MatriculasPage"
+             xmlns:vm="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.ViewModels"
+             x:DataType="vm:MatriculaListViewModel"
+             xmlns:dto="clr-namespace:AcademiaTioAlisson.Application.DTOs;assembly=AcademiaTioAlisson.Application"
+             xmlns:converters="clr-namespace:AcademiaTioAlisson.Presentation.AppMaui.Converters"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+        <converters:EnumDisplayConverter x:Key="EnumDisplay" />
+        <converters:RestricoesFlagsDisplayConverter x:Key="RestricoesDisplay" />
+
+        <DataTemplate x:Key="MatriculaItemTemplate" x:DataType="dto:MatriculaDto">
+            <Border Style="{StaticResource CardBorder}" Margin="8">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*,Auto,Auto" Padding="12">
+
+                    <!-- Foto circular do Aluno com OnIdiom -->
+                    <Border Grid.Row="0" Grid.RowSpan="6" Grid.Column="0"
+                            HeightRequest="60" WidthRequest="60"
+                            StrokeShape="RoundRectangle 30"
+                            Stroke="{StaticResource Primary}" StrokeThickness="2"
+                            Margin="0,0,12,0" VerticalOptions="Center">
+                        <Image Source="{Binding AlunoMatricula.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
+                               Aspect="AspectFill" HeightRequest="60" WidthRequest="60"/>
+                    </Border>
+
+                    <!-- Dados da Matrícula -->
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding AlunoMatricula.Nome}" FontAttributes="Bold" FontSize="16"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding AlunoMatricula.Cpf, StringFormat='CPF: {0}'}" FontSize="12"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding Plano, Converter={StaticResource EnumDisplay}, StringFormat='Plano: {0}'}" FontAttributes="Bold" FontSize="12"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="{Binding DataInicio, StringFormat='Início: {0:dd/MM/yyyy}'}" FontSize="12"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="{Binding DataFim, StringFormat='Término: {0:dd/MM/yyyy}'}" FontSize="12"/>
+                    <Label Grid.Row="5" Grid.Column="1" Text="{Binding RestricoesMedicas, Converter={StaticResource RestricoesDisplay}, StringFormat='Restrições: {0}'}" FontSize="12" LineBreakMode="WordWrap"/>
+
+                    <!-- Botões de Ação -->
+                    <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource ButtonSmall}" Margin="4,0" Clicked="OnEditButtonClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" />
+                        </Button.ImageSource>
+                    </Button>
+
+                    <Button Grid.Row="6" Grid.Column="3" Style="{StaticResource ButtonDanger}" Margin="4,0" Clicked="OnDeleteButtonClicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" />
+                        </Button.ImageSource>
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Barra de Busca -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <Picker Grid.Column="0" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="120"/>
+                <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Digite o valor..." ClearButtonVisibility="WhileEditing"/>
+                <Button Grid.Column="2" Style="{StaticResource ButtonPrimary}" Command="{Binding SearchMatriculasCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                    </Button.ImageSource>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Grade com OnIdiom -->
+        <Grid Grid.Row="1">
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding Matriculas}" ItemTemplate="{StaticResource MatriculaItemTemplate}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical">
+                            <GridItemsLayout.Span>
+                                <OnIdiom x:TypeArguments="x:Int32">
+                                    <OnIdiom.Phone>1</OnIdiom.Phone>
+                                    <OnIdiom.Default>1</OnIdiom.Default>
+                                    <OnIdiom.Tablet>2</OnIdiom.Tablet>
+                                    <OnIdiom.Desktop>3</OnIdiom.Desktop>
+                                    <OnIdiom.TV>4</OnIdiom.TV>
+                                </OnIdiom>
+                            </GridItemsLayout.Span>
+                        </GridItemsLayout>
+                    </CollectionView.ItemsLayout>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- FAB Adicionar Matrícula -->
+            <Button Command="{Binding AddMatriculaCommand}" Style="{StaticResource ButtonPrimary}"
+                    WidthRequest="56" HeightRequest="56" CornerRadius="28"
+                    HorizontalOptions="End" VerticalOptions="End" Margin="20">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" />
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+    </Grid>
+</ContentPage>
