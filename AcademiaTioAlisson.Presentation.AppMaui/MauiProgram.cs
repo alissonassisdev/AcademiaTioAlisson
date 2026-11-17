@@ -2,6 +2,8 @@
 using AcademiaTioAlisson.Presentation.AppMaui.Configuration;
 using AcademiaTioAlisson.Presentation.AppMaui.ViewModels;
 using AcademiaTioAlisson.Presentation.AppMaui.Views;
+using AcademiaTioAlisson.Application.Interfaces;
+using AcademiaTioAlisson.Application.Services;
 using Microsoft.Extensions.Logging;
 
 namespace AcademiaTioAlisson.Presentation.AppMaui;
@@ -22,6 +24,7 @@ public static class MauiProgram
 
         ConfigurationHelper.ConfigureServices(builder.Services);
 
+        builder.Services.AddTransient<IAcessoService, AcessoService>();
         // ViewModels
         builder.Services.AddTransient<DashboardListViewModel>();
         builder.Services.AddTransient<LogradouroListViewModel>();
@@ -53,6 +56,12 @@ public static class MauiProgram
         // Views
         builder.Services.AddTransient<MatriculaListPage>();
         builder.Services.AddTransient<MatriculaPage>();
+
+        // ViewModels
+        builder.Services.AddTransient<AcessoViewModel>();
+
+        // Views
+        builder.Services.AddTransient<AcessoPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

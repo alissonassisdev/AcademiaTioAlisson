@@ -78,6 +78,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\AcessoPage.xaml.cs">
+	    <DependentUpon>AcessoPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\MatriculaPage.xaml.cs">
 	    <DependentUpon>MatriculaPage.xaml</DependentUpon>
 	  </Compile>
@@ -111,6 +114,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\AcessoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\MatriculaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
